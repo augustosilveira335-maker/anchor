@@ -130,6 +130,83 @@
     addEventListener('resize', function () { var i = bs.findIndex(function (b) { return b.getAttribute('aria-selected') === 'true'; }); if (i > -1) vai(i); });
   });
 
+
+  /* títulos palavra por palavra */
+  function quebra(el) {
+    var i = 0;
+    (function anda(no) {
+      [].slice.call(no.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var partes = n.textContent.split(/(\s+)/), frag = d.createDocumentFragment();
+          partes.forEach(function (t) {
+            if (!t) return;
+            if (/^\s+$/.test(t)) { frag.appendChild(d.createTextNode(t)); return; }
+            var a = d.createElement('span'), b = d.createElement('span');
+            a.className = 'pl'; b.className = 'pli'; b.style.setProperty('--i', i++); b.textContent = t; a.appendChild(b); frag.appendChild(a);
+          });
+          n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.classList && n.classList.contains('sub')) {
+          var a2 = d.createElement('span'), b2 = d.createElement('span');
+          a2.className = 'pl pl-sub'; b2.className = 'pli'; b2.style.setProperty('--i', i++);
+          n.parentNode.replaceChild(a2, n); b2.appendChild(n); a2.appendChild(b2);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') anda(n);
+      });
+    })(el);
+    el.classList.add('split');
+  }
+  if (!reduz) d.querySelectorAll('.t1, .t2').forEach(function (el) {
+    quebra(el);
+    if ('IntersectionObserver' in window) {
+      var o = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { setTimeout(function () { el.classList.add('in'); }, el.closest('.heroi') ? 350 : 0); o.disconnect(); } }); }, { threshold: .2 });
+      o.observe(el);
+    } else el.classList.add('in');
+  });
+
+  /* abertura: só na primeira visita da sessão */
+  var intro = d.querySelector('.intro');
+  if (intro) {
+    var viu = false; try { viu = sessionStorage.getItem('anchor-intro') === '1'; sessionStorage.setItem('anchor-intro', '1'); } catch (e) {}
+    if (viu || reduz) intro.remove();
+    else { intro.classList.add('vivo'); setTimeout(function () { intro.classList.add('sai'); }, 1250); setTimeout(function () { intro.remove(); }, 2400); }
+  }
+
+  /* rolagem suave no desktop */
+  if (window.Lenis && !reduz && matchMedia('(pointer:fine)').matches) {
+    var lenis = new Lenis({ lerp: .09, smoothWheel: true });
+    (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+    d.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) { var alvo = d.querySelector(a.getAttribute('href')); if (alvo) { e.preventDefault(); lenis.scrollTo(alvo, { offset: -90 }); } });
+    });
+  }
+
+
+  /* painel: contadores, próximo prazo real e animação ao aparecer */
+  function contar(el) {
+    var fim = +el.getAttribute('data-conta'), pre = el.getAttribute('data-pre') || '';
+    if (reduz || !fim) { el.textContent = pre + fim.toLocaleString('pt-BR'); return; }
+    var t0 = null;
+    (function f(t) { t0 = t0 || t; var p = Math.min(1, (t - t0) / 1600), v = Math.round(fim * (1 - Math.pow(1 - p, 3))); el.textContent = pre + v.toLocaleString('pt-BR'); if (p < 1) requestAnimationFrame(f); })(performance.now());
+  }
+  if (A) {
+    var pz = A.proximos(hoje, 8), g0 = agrupa(pz)[0];
+    if (g0) {
+      d.querySelectorAll('[data-dash-prazo]').forEach(function (e) { e.textContent = curta(g0.data); });
+      d.querySelectorAll('[data-dash-prazo-nome]').forEach(function (e) { e.textContent = nomes(g0.nomes); });
+    }
+  }
+  if ('IntersectionObserver' in window && !reduz) {
+    var oc = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        if (e.target.hasAttribute('data-conta')) contar(e.target);
+        e.target.querySelectorAll('[data-conta]').forEach(contar);
+        oc.unobserve(e.target);
+      });
+    }, { threshold: .3 });
+    d.querySelectorAll('[data-dash], .numeros [data-conta], .il').forEach(function (el) { oc.observe(el); });
+  } else d.querySelectorAll('[data-dash], .il').forEach(function (el) { el.classList.add('in'); });
+
   /* formulário que vira mensagem de WhatsApp */
   d.querySelectorAll('[data-form-wa]').forEach(function (f) {
     f.addEventListener('submit', function (e) {
