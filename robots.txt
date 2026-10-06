@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /analise/
+
+Sitemap: https://anchor.anvilmarketing.com.br/sitemap.xml
