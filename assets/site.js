@@ -39,32 +39,42 @@
   }
   function nomes(arr) { return arr.length > 1 ? arr.slice(0, -1).join(', ') + ' e ' + arr[arr.length - 1] : arr[0]; }
 
-  /* mostrador do mês */
+  /* mostrador do mês: relógio de ouro */
   function mostrador(el) {
     if (!A) return;
     var a = hoje.getFullYear(), m = hoje.getMonth(), n = new Date(a, m + 1, 0).getDate();
     var itens = A.itensDoMes(a, m), venc = {};
     itens.forEach(function (it) { if (it.data.getMonth() === m) venc[it.data.getDate()] = 1; });
-    var cx = 180, cy = 180, R1 = 150, R2 = 164, s = '';
-    s += '<circle class="aro" cx="180" cy="180" r="172"/><circle class="aro" cx="180" cy="180" r="128"/>';
+    var cx = 180, cy = 180, s = '';
+    s += '<defs><radialGradient id="faceG" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#1F3556"/><stop offset=".6" stop-color="#11203A"/><stop offset="1" stop-color="#0A1422"/></radialGradient>' +
+      '<linearGradient id="ouroAro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBEFC4"/><stop offset=".25" stop-color="#D9B24C"/><stop offset=".5" stop-color="#8E6A14"/><stop offset=".72" stop-color="#F0D488"/><stop offset="1" stop-color="#A87F1F"/></linearGradient>' +
+      '<linearGradient id="ouroLinha" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#A87F1F"/><stop offset=".5" stop-color="#F3DC9A"/><stop offset="1" stop-color="#D4AF37"/></linearGradient></defs>';
+    s += '<circle cx="180" cy="180" r="178" fill="none" stroke="url(#ouroAro)" stroke-width="9"/>';
+    s += '<circle cx="180" cy="180" r="172" fill="url(#faceG)"/>';
+    s += '<circle cx="180" cy="180" r="166" fill="none" stroke="rgba(243,220,154,.28)" stroke-width="1"/>';
+    s += '<circle cx="180" cy="180" r="104" fill="none" stroke="rgba(243,220,154,.12)" stroke-width="1"/>';
     for (var i = 1; i <= n; i++) {
       var ang = ((i - 1) / n) * 2 * Math.PI - Math.PI / 2, dt = new Date(a, m, i), w = dt.getDay();
       var c = Math.cos(ang), sn = Math.sin(ang), v = venc[i];
-      var r1 = v ? R1 - 8 : R1, cls = 'tick' + (v ? ' venc' : (w === 0 || w === 6) ? ' fds' : '') + (i < hoje.getDate() && !v ? ' passou' : '');
-      s += '<line class="' + cls + '" x1="' + (cx + c * r1).toFixed(1) + '" y1="' + (cy + sn * r1).toFixed(1) + '" x2="' + (cx + c * R2).toFixed(1) + '" y2="' + (cy + sn * R2).toFixed(1) + '"/>';
-      if (v || i === 1 || i % 5 === 0) s += '<text class="rot' + (v ? ' venc' : '') + '" x="' + (cx + c * 182).toFixed(1) + '" y="' + (cy + sn * 182).toFixed(1) + '">' + dd(i) + '</text>';
+      var r1 = v ? 136 : 150, r2 = 162;
+      var cls = 'tick' + (v ? ' venc' : (w === 0 || w === 6) ? ' fds' : '') + (i < hoje.getDate() && !v ? ' passou' : '');
+      s += '<line class="' + cls + '" x1="' + (cx + c * r1).toFixed(1) + '" y1="' + (cy + sn * r1).toFixed(1) + '" x2="' + (cx + c * r2).toFixed(1) + '" y2="' + (cy + sn * r2).toFixed(1) + '"/>';
+      if (v || i === 1 || i % 5 === 0) s += '<text class="rot' + (v ? ' venc' : '') + '" x="' + (cx + c * (v ? 121 : 135)).toFixed(1) + '" y="' + (cy + sn * (v ? 121 : 135)).toFixed(1) + '">' + dd(i) + '</text>';
     }
-    var frac = (hoje.getDate() - 1) / n, C = 2 * Math.PI * 128;
-    s += '<circle class="arco" cx="180" cy="180" r="128" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + C.toFixed(1) + '" transform="rotate(-90 180 180)"/>';
-    s += '<line class="agulha" x1="180" y1="180" x2="180" y2="40" style="transform:rotate(0deg)"/><circle cx="180" cy="180" r="4" fill="#F4F1EA"/>';
+    var frac = (hoje.getDate() - 1) / n, C = 2 * Math.PI * 104;
+    s += '<circle class="arco" cx="180" cy="180" r="104" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + C.toFixed(1) + '" transform="rotate(-90 180 180)"/>';
+    s += '<g class="agulha" style="transform:rotate(0deg)"><path d="M180 12 L185.5 24 L182.2 70 L177.8 70 L174.5 24 Z" fill="url(#ouroAro)"/><circle cx="180" cy="20" r="2.2" fill="#0A1422"/></g>';
     var svg = el.querySelector('svg'); svg.innerHTML = s;
     var prox = A.proximos(hoje, 12), g = agrupa(prox)[0];
     var cen = el.querySelector('.centro');
     if (g) cen.innerHTML = '<small>' + (g.dias <= 1 ? 'próximo vencimento' : 'faltam') + '</small><strong>' + (g.dias <= 1 ? curta(g.data) : g.dias) + '</strong><span>' + (g.dias <= 1 ? quando(g.dias) + ' · ' : 'dias para ') + nomes(g.nomes) + '</span>';
-    requestAnimationFrame(function () { setTimeout(function () {
+    var vai = function () {
       svg.querySelector('.arco').style.strokeDashoffset = (C * (1 - frac)).toFixed(1);
       svg.querySelector('.agulha').style.transform = 'rotate(' + (frac * 360).toFixed(2) + 'deg)';
-    }, reduz ? 0 : 250); });
+    };
+    if (reduz || !('IntersectionObserver' in window)) { vai(); return; }
+    var ob = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { setTimeout(vai, 200); ob.disconnect(); } }, { threshold: .35 });
+    ob.observe(el);
   }
 
   function listaProx(el, filtro, n) {
