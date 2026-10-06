@@ -904,6 +904,8 @@ footer i{font-style:normal;color:var(--or2)}
 .pl.rec .mk{color:var(--paper-d);border-color:rgba(245,241,230,.16);--mkbg:rgba(245,241,230,.1)}
 @media(min-width:901px){.hero .ficha{position:relative;z-index:5;background:rgba(245,241,230,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:18px;padding:4px 18px 8px;box-shadow:0 20px 40px -30px rgba(120,40,10,.4)}.hero .ficha div:first-child{border-top:0}}
 .pauta-bar i{width:calc(var(--feitas,0) / 8 * 100%)}
+.planos{grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr)}
+@media(max-width:900px){.planos{grid-template-columns:minmax(0,1fr)}}
 
 </style>
 </head>
@@ -1535,12 +1537,6 @@ footer i{font-style:normal;color:var(--or2)}
     <div class="precos rv">
       <div class="pp-top"><b>Formatos para a Anchor</b><span class="pp-seg" aria-hidden="true"><span class="on">Mensal</span><span>Ciclo de 6 meses</span></span></div>
       <div class="planos">
-        <article class="pl">
-          <h3>Presença</h3>
-          <p>Só conteúdo e Google, sem anúncios.</p>
-          <ul><li><svg class="ic" aria-hidden="true"><use href="#ic-ok"/></svg>12 posts por mês</li><li><svg class="ic" aria-hidden="true"><use href="#ic-ok"/></svg>4 vídeos por mês</li><li class="nao"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg>Sem anúncios</li></ul>
-          <span class="vl preco">R$ 1.900<small> /mês</small></span>
-        </article>
         <article class="pl rec">
           <span class="tag">Recomendado para a Anchor</span>
           <h3>Captação</h3>
@@ -1556,20 +1552,20 @@ footer i{font-style:normal;color:var(--or2)}
             <div><span>Reunião de resultado</span><b>1/mês</b></div>
           </div>
           <div class="preco-rec">
-            <div class="preco" id="precoBox"><span class="de">de R$ 3.200</span><span class="por">R$ 2.500<small> /mês</small></span></div>
+            <div class="preco" id="precoBox"><span class="por">R$ 3.000<small> /mês</small></span></div>
             <button class="pill laranja" id="liberar" type="button">Desbloquear investimento <span class="seta">→</span></button>
           </div>
           <div class="calc">
             <label for="ticket">Qual o honorário médio mensal de um cliente da Anchor?</label>
-            <div class="cx"><span>R$</span><input id="ticket" inputmode="numeric" autocomplete="off" placeholder="valor da Jaqueline"></div>
-            <output for="ticket" id="calcOut" aria-live="polite">Assinatura mais verba mínima somam R$ 4.000 por mês.</output>
+            <div class="cx"><span>R$</span><input id="ticket" inputmode="numeric" autocomplete="off" placeholder="ex.: 900"></div>
+            <output for="ticket" id="calcOut" aria-live="polite">Assinatura mais verba mínima somam R$ 4.500 por mês.</output>
           </div>
         </article>
         <article class="pl">
           <h3>Captação + Google</h3>
           <p>Tudo da Captação mais anúncios na pesquisa do Google.</p>
-          <ul><li><svg class="ic" aria-hidden="true"><use href="#ic-ok"/></svg>Tudo da Captação</li><li><svg class="lg lg-gads" role="img" aria-label="Google Ads"><use href="#lg-gads"/></svg>Anúncio em "contabilidade campo bom" e "novo hamburgo"</li></ul>
-          <span class="vl preco">R$ 3.200<small> /mês</small></span>
+          <ul><li><svg class="ic" aria-hidden="true"><use href="#ic-ok"/></svg>Tudo da Captação</li><li><svg class="lg lg-gads" role="img" aria-label="Google Ads"><use href="#lg-gads"/></svg>Anúncio em "contabilidade campo bom" e "novo hamburgo"</li><li><svg class="ic" aria-hidden="true"><use href="#ic-ok"/></svg>Palavras e verba revisadas toda semana</li><li><svg class="ic" aria-hidden="true"><use href="#ic-ok"/></svg>Origem de cada contato: Google ou Meta</li></ul>
+          <span class="vl preco">R$ 4.300<small> /mês</small></span>
         </article>
       </div>
     </div>
@@ -1860,9 +1856,9 @@ footer i{font-style:normal;color:var(--or2)}
   var tk = d.getElementById('ticket'), out = d.getElementById('calcOut');
   if (tk) tk.addEventListener('input', function(){
     var v = parseInt(tk.value.replace(/\D/g, ''), 10);
-    if (!v){ out.textContent = 'Assinatura mais verba mínima somam R$ 4.000 por mês.'; return; }
+    if (!v){ out.textContent = 'Assinatura mais verba mínima somam R$ 4.500 por mês.'; return; }
     tk.value = v.toLocaleString('pt-BR');
-    var n = Math.ceil(4000 / v);
+    var n = Math.ceil(4500 / v);
     out.innerHTML = '<b>' + n + '</b>' + (n === 1 ? 'cliente com esse honorário paga' : 'clientes com esse honorário pagam') + ' a assinatura e a verba mínima do mês.';
   });
 
