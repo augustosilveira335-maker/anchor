@@ -24,8 +24,8 @@
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
-    d.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
-  } else d.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
+    d.querySelectorAll('.rv,.foto-rv').forEach(function (el) { io.observe(el); });
+  } else d.querySelectorAll('.rv,.foto-rv').forEach(function (el) { el.classList.add('in'); });
 
   /* agrupa itens com a mesma data */
   function agrupa(lista) {
@@ -39,41 +39,41 @@
   }
   function nomes(arr) { return arr.length > 1 ? arr.slice(0, -1).join(', ') + ' e ' + arr[arr.length - 1] : arr[0]; }
 
-  /* mostrador do mês: relógio de ouro */
+  /* mostrador do mês: cronômetro de traço fino */
   function mostrador(el) {
     if (!A) return;
     var a = hoje.getFullYear(), m = hoje.getMonth(), n = new Date(a, m + 1, 0).getDate();
     var itens = A.itensDoMes(a, m), venc = {};
     itens.forEach(function (it) { if (it.data.getMonth() === m) venc[it.data.getDate()] = 1; });
     var cx = 180, cy = 180, s = '';
-    s += '<defs><radialGradient id="faceG" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="#1F3556"/><stop offset=".6" stop-color="#11203A"/><stop offset="1" stop-color="#0A1422"/></radialGradient>' +
-      '<linearGradient id="ouroAro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBEFC4"/><stop offset=".25" stop-color="#D9B24C"/><stop offset=".5" stop-color="#8E6A14"/><stop offset=".72" stop-color="#F0D488"/><stop offset="1" stop-color="#A87F1F"/></linearGradient>' +
-      '<linearGradient id="ouroLinha" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#A87F1F"/><stop offset=".5" stop-color="#F3DC9A"/><stop offset="1" stop-color="#D4AF37"/></linearGradient></defs>';
-    s += '<circle cx="180" cy="180" r="178" fill="none" stroke="url(#ouroAro)" stroke-width="9"/>';
-    s += '<circle cx="180" cy="180" r="172" fill="url(#faceG)"/>';
-    s += '<circle cx="180" cy="180" r="166" fill="none" stroke="rgba(243,220,154,.28)" stroke-width="1"/>';
-    s += '<circle cx="180" cy="180" r="104" fill="none" stroke="rgba(243,220,154,.12)" stroke-width="1"/>';
+    s += '<circle cx="180" cy="180" r="178" fill="none" stroke="rgba(244,239,230,.55)" stroke-width="1"/>';
+    s += '<circle cx="180" cy="180" r="171" fill="none" stroke="rgba(244,239,230,.18)" stroke-width="1"/>';
+    s += '<circle cx="180" cy="180" r="104" fill="none" stroke="rgba(244,239,230,.1)" stroke-width="1"/>';
+    for (var q = 0; q < 60; q++) {
+      var aq = q / 60 * 2 * Math.PI, r0 = q % 5 ? 174 : 172;
+      s += '<line x1="' + (cx + Math.cos(aq) * r0).toFixed(1) + '" y1="' + (cy + Math.sin(aq) * r0).toFixed(1) + '" x2="' + (cx + Math.cos(aq) * 178).toFixed(1) + '" y2="' + (cy + Math.sin(aq) * 178).toFixed(1) + '" stroke="rgba(244,239,230,.3)" stroke-width=".7"/>';
+    }
     for (var i = 1; i <= n; i++) {
       var ang = ((i - 1) / n) * 2 * Math.PI - Math.PI / 2, dt = new Date(a, m, i), w = dt.getDay();
       var c = Math.cos(ang), sn = Math.sin(ang), v = venc[i];
-      var r1 = v ? 136 : 150, r2 = 162;
+      var r1 = v ? 138 : 152, r2 = 164;
       var cls = 'tick' + (v ? ' venc' : (w === 0 || w === 6) ? ' fds' : '') + (i < hoje.getDate() && !v ? ' passou' : '');
       s += '<line class="' + cls + '" x1="' + (cx + c * r1).toFixed(1) + '" y1="' + (cy + sn * r1).toFixed(1) + '" x2="' + (cx + c * r2).toFixed(1) + '" y2="' + (cy + sn * r2).toFixed(1) + '"/>';
-      if (v || i === 1 || i % 5 === 0) s += '<text class="rot' + (v ? ' venc' : '') + '" x="' + (cx + c * (v ? 121 : 135)).toFixed(1) + '" y="' + (cy + sn * (v ? 121 : 135)).toFixed(1) + '">' + dd(i) + '</text>';
+      if (v || i === 1 || i % 5 === 0) s += '<text class="rot' + (v ? ' venc' : '') + '" x="' + (cx + c * (v ? 122 : 136)).toFixed(1) + '" y="' + (cy + sn * (v ? 122 : 136)).toFixed(1) + '">' + i + '</text>';
     }
     var frac = (hoje.getDate() - 1) / n, C = 2 * Math.PI * 104;
     s += '<circle class="arco" cx="180" cy="180" r="104" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + C.toFixed(1) + '" transform="rotate(-90 180 180)"/>';
-    s += '<g class="agulha" style="transform:rotate(0deg)"><path d="M180 12 L185.5 24 L182.2 70 L177.8 70 L174.5 24 Z" fill="url(#ouroAro)"/><circle cx="180" cy="20" r="2.2" fill="#0A1422"/></g>';
+    s += '<g class="agulha" style="transform:rotate(0deg)"><line x1="180" y1="196" x2="180" y2="14" stroke="#C9AE72" stroke-width="1.2"/><circle cx="180" cy="14" r="3" fill="none" stroke="#C9AE72" stroke-width="1"/></g><circle cx="180" cy="180" r="3.5" fill="#C9AE72"/>';
     var svg = el.querySelector('svg'); svg.innerHTML = s;
     var prox = A.proximos(hoje, 12), g = agrupa(prox)[0];
     var cen = el.querySelector('.centro');
-    if (g) cen.innerHTML = '<small>' + (g.dias <= 1 ? 'próximo vencimento' : 'faltam') + '</small><strong>' + (g.dias <= 1 ? curta(g.data) : g.dias) + '</strong><span>' + (g.dias <= 1 ? quando(g.dias) + ' · ' : 'dias para ') + nomes(g.nomes) + '</span>';
+    if (g) cen.innerHTML = '<small>' + (g.dias <= 1 ? 'próximo vencimento' : 'faltam') + '</small><strong>' + (g.dias <= 1 ? curta(g.data) : g.dias) + '</strong><span>' + (g.dias <= 1 ? quando(g.dias) + ', ' : 'dias para ') + nomes(g.nomes) + '</span>';
     var vai = function () {
       svg.querySelector('.arco').style.strokeDashoffset = (C * (1 - frac)).toFixed(1);
       svg.querySelector('.agulha').style.transform = 'rotate(' + (frac * 360).toFixed(2) + 'deg)';
     };
     if (reduz || !('IntersectionObserver' in window)) { vai(); return; }
-    var ob = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { setTimeout(vai, 200); ob.disconnect(); } }, { threshold: .35 });
+    var ob = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { setTimeout(vai, 250); ob.disconnect(); } }, { threshold: .35 });
     ob.observe(el);
   }
 
