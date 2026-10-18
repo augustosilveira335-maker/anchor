@@ -513,3 +513,71 @@ section:not(.escuro):not(.meio) .pilares p{color:var(--tinta2)}
 .js .split .pl-sub{padding-bottom:.22em;margin-bottom:-.22em}
 .g-leg{font:500 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:rgba(244,239,230,.5);margin:-4px 0 14px}
 .g-leg i:first-child{margin-left:0}
+
+/* ===== v5 · sistema de gestão (18/10/2026) ===== */
+/* home: texto + painel de módulos */
+.sis-grade{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(40px,7vw,120px);align-items:center}
+.sis-grade .acoes{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin-top:34px}
+.sis-preco{margin:22px 0 0;font:500 11.5px/1.5 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--cinza)}
+.seg-lista{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:32px;padding-top:20px;border-top:1px solid var(--fio)}
+.seg-lista>span{font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ouro);margin-right:10px}
+.seg-lista a{padding:10px 14px;border:1px solid var(--fio);text-decoration:none;font:500 12.5px/1 var(--sans);letter-spacing:.06em;color:var(--tinta);transition:background .4s var(--lento),color .4s var(--lento),border-color .4s var(--lento)}
+.seg-lista a:hover{background:var(--marinho);color:var(--papel);border-color:var(--marinho)}
+.sis-painel{background:linear-gradient(180deg,#1B2E48,#122238);color:var(--papel);border:1px solid rgba(201,174,114,.28);box-shadow:0 60px 120px -60px rgba(14,26,43,.55)}
+.sis-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 24px;border-bottom:1px solid var(--fio-m);font:500 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:rgba(244,239,230,.6)}
+.sis-mods{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.sis-mods li{display:flex;flex-direction:column;gap:16px;padding:28px 24px 26px;border-right:1px solid var(--fio-m);border-bottom:1px solid var(--fio-m);font:400 20px/1.15 var(--serif);min-width:0}
+.sis-mods li:nth-child(3n){border-right:0}
+.sis-mods .il{stroke:var(--ouro-c)}
+.sis-pe{display:flex;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;padding:16px 24px;font:500 10.5px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:rgba(244,239,230,.55)}
+.sis-pe b{font-weight:500;color:var(--ouro-c)}
+@media(max-width:960px){.sis-grade{grid-template-columns:1fr}}
+@media(max-width:560px){.sis-mods li{padding:20px 12px 18px;gap:12px;font-size:16px}.sis-mods .il{width:24px;height:24px}.sis-top,.sis-pe{padding-inline:16px}}
+
+/* /sistema/: segmentos */
+.segs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--fio)}
+.seg{display:flex;flex-direction:column;gap:14px;padding:34px 26px 38px;border-bottom:1px solid var(--fio);border-left:1px solid var(--fio);scroll-margin-top:110px;text-decoration:none;min-width:0;transition:box-shadow .6s var(--lento)}
+.seg:nth-child(4n+1){border-left:0;padding-left:0}
+.seg .il{width:34px;height:34px;margin-bottom:8px}
+.seg h3{font:400 clamp(26px,2.1vw,32px)/1.08 var(--serif)}
+.seg ul{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:10px}
+.seg li{position:relative;padding-left:22px;font-size:15px;line-height:1.45;color:var(--tinta2)}
+.seg li::before{content:"";position:absolute;left:0;top:.72em;width:12px;height:1px;background:var(--ouro)}
+.seg:target{box-shadow:inset 0 2px 0 var(--ouro)}
+.seg:target h3{font-style:italic}
+.seg-sob{background:var(--marinho);color:var(--papel)}
+.segs .seg-sob{padding-left:26px}
+.seg-sob .il{stroke:var(--ouro-c)}
+.seg-sob p{margin:0;color:var(--texto-m);font-size:15px;max-width:26ch}
+.seg-sob .lk{align-self:flex-start;margin-top:auto;color:var(--papel)}
+.seg-sob:hover h3{font-style:italic}
+@media(max-width:1100px){.segs{grid-template-columns:repeat(2,minmax(0,1fr))}.seg:nth-child(4n+1){border-left:1px solid var(--fio);padding-left:26px}.seg:nth-child(2n+1){border-left:0;padding-left:0}}
+@media(max-width:640px){.segs{grid-template-columns:1fr}.seg:nth-child(n){border-left:0;padding:28px 0 30px}.segs .seg-sob{padding:28px 22px 30px}}
+
+/* /sistema/: módulos */
+.mods{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--fio-m)}
+.mods li{display:grid;grid-template-columns:46px minmax(0,1fr);gap:6px 16px;align-content:start;padding:30px 26px 30px 0;border-bottom:1px solid var(--fio-m);min-width:0}
+.mods li:not(:nth-child(3n+1)){padding-left:26px;border-left:1px solid var(--fio-m)}
+.mods .il{grid-row:1/3;width:30px;height:30px}
+.mods h3{font:400 26px/1.1 var(--serif)}
+.mods p{margin:0;font-size:15px;color:var(--texto-m)}
+@media(max-width:900px){.mods{grid-template-columns:1fr 1fr}.mods li:not(:nth-child(3n+1)){padding-left:0;border-left:0}.mods li:nth-child(2n){padding-left:22px;border-left:1px solid var(--fio-m)}}
+@media(max-width:560px){.mods{grid-template-columns:1fr}.mods li:nth-child(n){padding-left:0;border-left:0;padding-block:24px}}
+
+/* /sistema/: três passos, números e sob medida */
+.troca.tres{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.troca.tres{grid-template-columns:1fr}.troca.tres li,.troca.tres li+li{padding-left:0;border-left:0}}
+.numeros.dois{grid-template-columns:repeat(2,minmax(0,1fr))}
+.numeros.dois span{max-width:30ch}
+@media(max-width:760px){.numeros.dois{grid-template-columns:1fr}}
+.acoes-s{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center;margin-top:60px}
+.sob-l{list-style:none;margin:40px 0 0;padding:0;border-top:1px solid var(--fio-m)}
+.sob-l li{position:relative;padding:15px 0 15px 26px;border-bottom:1px solid var(--fio-m);font-size:15.5px;color:var(--texto-m)}
+.sob-l li::before{content:"";position:absolute;left:0;top:1.45em;width:14px;height:1px;background:var(--ouro-c)}
+.sob-pe{display:flex;flex-wrap:wrap;align-items:center;gap:16px 28px;margin-top:40px}
+.escuro .sob-pe .marca-d{color:var(--ouro-c)}
+.meio .bt .txt{display:inline;padding:0}
+/* menu com o item Sistema: cabe entre 1081 e 1280 px */
+@media(min-width:1081px) and (max-width:1280px){.menu{gap:20px}.menu a{letter-spacing:.1em}.topo .c{gap:22px}}
+.menu a{white-space:nowrap}
+@media(min-width:1081px) and (max-width:1199px){.topo .bt{display:none}}
